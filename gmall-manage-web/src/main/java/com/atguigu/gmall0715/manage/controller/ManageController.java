@@ -30,7 +30,7 @@ public class ManageController {
         return manageService.getCatalog2(baseCatalog2);
     }
     @RequestMapping("getCatalog3")
-    public List<BaseCatalog3> getCatalog2(String catalog2Id, BaseCatalog3 baseCatalog3){
+    public List<BaseCatalog3> getCatalog3(String catalog2Id, BaseCatalog3 baseCatalog3){
 
         return manageService.getCatalog3(baseCatalog3);
     }
