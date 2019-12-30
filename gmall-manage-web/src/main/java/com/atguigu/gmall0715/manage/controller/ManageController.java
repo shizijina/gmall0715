@@ -37,8 +37,10 @@ public class ManageController {
     @RequestMapping("attrInfoList")
     public List<BaseAttrInfo> attrInfoList(String catalog3Id,BaseAttrInfo baseAttrInfo){
 
-        return manageService.getAttrInfoList(baseAttrInfo);
+        //return manageService.getAttrInfoList(baseAttrInfo);
+        return manageService.getAttrInfoList(catalog3Id);
     }
+
     //必须接收前端数据，然后保存
     @RequestMapping("saveAttrInfo")
     public void saveAttrInfo(@RequestBody BaseAttrInfo baseAttrInfo){
