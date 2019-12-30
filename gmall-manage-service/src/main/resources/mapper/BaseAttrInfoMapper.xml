@@ -17,6 +17,7 @@
                 cloumn：表示通过sql 执行完成之后的 字段
             -->
     <id property="id" column="id"></id>
+
         <!--result:表示的普通字段-->
         <!--<result property="attrName" column="attr_Name"></result>-->
         <!--mybatis 如何表示这种1：n 的关系-->
