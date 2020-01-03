@@ -18,7 +18,7 @@ import java.util.List;
 public class SkuManageController {
     @Reference
     private ManageService manageService;
-
+    //回显spu图片
     @RequestMapping("spuImageList")
     public List<SpuImage> getSpuImageList(String spuId ,SpuImage spuImage){
 
@@ -30,6 +30,7 @@ public class SkuManageController {
 
         return manageService.getspuSaleAttrList(spuId);
     }
+    //添加sku
     @RequestMapping("saveSkuInfo")
     public void saveSkuInfo(@RequestBody SkuInfo skuInfo){
         manageService.saveSkuInfo(skuInfo);

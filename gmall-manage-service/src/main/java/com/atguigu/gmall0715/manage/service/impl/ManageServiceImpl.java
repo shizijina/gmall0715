@@ -176,20 +176,21 @@ public class ManageServiceImpl implements ManageService{
         //直接保存商品
         skuInfoMapper.insert(skuInfo);
         //保存图片
+
         List<SkuImage> skuImageList = skuInfo.getSkuImageList();
-        if(skuImageList!=null&&skuImageList.size()>0){
+        if (skuImageList!=null && skuImageList.size()>0){
             for (SkuImage skuImage : skuImageList) {
-                skuImage.setSkuId(skuInfo.getSpuId());
-                skuImageMapper.insert(skuImage);
+                skuImage.setSkuId(skuInfo.getId());
+                skuImageMapper.insertSelective(skuImage);
             }
         }
 
         // 获取出sku与平台属性的关系
         List<SkuAttrValue> skuAttrValueList = skuInfo.getSkuAttrValueList();
-        if(skuAttrValueList!=null&&skuAttrValueList.size()>0){
-            for (SkuAttrValue attrValue : skuAttrValueList) {
-                attrValue.setSkuId(skuInfo.getSpuId());
-                skuAttrValueMapper.insert(attrValue);
+        if (skuAttrValueList!=null&& skuAttrValueList.size()>0){
+            for (SkuAttrValue skuAttrValue : skuAttrValueList) {
+                skuAttrValue.setSkuId(skuInfo.getId());
+                skuAttrValueMapper.insertSelective(skuAttrValue);
             }
         }
         // 获取sku与销售属性的集合
@@ -201,5 +202,29 @@ public class ManageServiceImpl implements ManageService{
                 skuSaleAttrValueMapper.insertSelective(skuSaleAttrValue);
             }
         }
+    }
+
+    @Override
+    public SkuInfo getSkuInfo(String skuId) {
+        SkuInfo skuInfo = skuInfoMapper.selectByPrimaryKey(skuId);
+        // select * from skuImage where skuId = skuId
+        SkuImage skuImage = new SkuImage();
+        skuImage.setSkuId(skuId);
+        List<SkuImage> skuImages = skuImageMapper.select(skuImage);
+        for (SkuImage image : skuImages) {
+            System.out.println(image.getImgUrl());
+        }
+        skuInfo.setSkuImageList(skuImages);
+        return skuInfo;
+    }
+
+    @Override
+    public List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(SkuInfo skuInfo) {
+        return spuSaleAttrMapper.selectSpuSaleAttrListCheckBySku(skuInfo.getId(),skuInfo.getSpuId());
+    }
+
+    @Override
+    public List<SkuSaleAttrValue> getSkuSaleAttrValueListBySpu(String spuId) {
+        return skuSaleAttrValueMapper.selectSkuSaleAttrValueListBySpu(spuId);
     }
 }
