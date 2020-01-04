@@ -21,7 +21,7 @@ public class ItemController {
     @RequestMapping("{skuId}.html")
     public String item(@PathVariable String skuId, HttpServletRequest request){
         // 将商品的图片列表封装到skuInfo 的 skuImageList
-        System.out.println(skuId);
+       // System.out.println(skuId);
        SkuInfo skuInfo=manageService.getSkuInfo(skuId);
 
         // 查询销售属性-销售属性值并锁定
