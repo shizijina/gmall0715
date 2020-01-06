@@ -257,6 +257,9 @@ public class ManageServiceImpl implements ManageService{
                         // 业务逻辑
                         // 缓存中没有数据
                         skuInfo =  getSkuInfoDB(skuId);
+                        if(skuInfo==null){
+                            jedis.setex(skuKey,ManageConst.SKUKEY_TIMEOUT,"");
+                        }
                         // 将数据放入缓存
                         jedis.setex(skuKey,ManageConst.SKUKEY_TIMEOUT, JSON.toJSONString(skuInfo));
                         return skuInfo;
@@ -350,8 +353,11 @@ public class ManageServiceImpl implements ManageService{
         // select * from skuImage where skuId = skuId
         SkuImage skuImage = new SkuImage();
         skuImage.setSkuId(skuId);
-        List<SkuImage> skuImages = skuImageMapper.select(skuImage);
-        skuInfo.setSkuImageList(skuImages);
+        skuInfo.setSkuImageList( skuImageMapper.select(skuImage));
+        // skuAttrValue
+        SkuAttrValue skuAttrValue = new SkuAttrValue();
+        skuAttrValue.setSkuId(skuId);
+        skuInfo.setSkuAttrValueList(skuAttrValueMapper.select(skuAttrValue));
         return skuInfo;
     }
 
