@@ -4,11 +4,13 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.atguigu.gmall0715.bean.SkuLsInfo;
 import com.atguigu.gmall0715.bean.SkuLsParams;
 import com.atguigu.gmall0715.bean.SkuLsResult;
+import com.atguigu.gmall0715.config.RedisUtil;
 import com.atguigu.gmall0715.service.ListService;
 import io.searchbox.client.JestClient;
 import io.searchbox.core.Index;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
+import io.searchbox.core.Update;
 import io.searchbox.core.search.aggregation.TermsAggregation;
 import org.apache.lucene.util.QueryBuilder;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -21,6 +23,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,7 +37,8 @@ public class ListServiceImpl implements ListService {
 
     @Autowired
     private JestClient jestClient;
-
+    @Autowired
+    private RedisUtil redisUtil;
     @Override
     public void saveSkuLsInfo(SkuLsInfo skuLsInfo) {
          /*
@@ -69,6 +73,34 @@ public class ListServiceImpl implements ListService {
         // 制作返回结果集
         SkuLsResult skuLsResult = makeResultForSearch(searchResult, skuLsParams);
         return skuLsResult;
+    }
+
+    @Override
+    public void incrHotScore(String skuId) {
+        Jedis jedis = redisUtil.getJedis();
+        //zSet
+        Double hotScore = jedis.zincrby("hotScore", 1, "skuId:" + skuId);
+        //当达到一定次数就更新es
+        if(hotScore%10==0){
+            updateHotScore(skuId,  Math.round(hotScore));
+        }
+    }
+
+    private void updateHotScore(String skuId, long hotScore) {
+        //定义dsl语句
+        String upd="{\n" +
+                "  \"doc\": {\n" +
+                "      \"hotScore\": "+hotScore+"\n" +
+                "  }\n" +
+                "}";
+        //执行动作
+        Update update = new Update.Builder(upd).index(ES_INDEX).type(ES_TYPE).id(skuId).build();
+        try {
+            jestClient.execute(update);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**

@@ -370,4 +370,12 @@ public class ManageServiceImpl implements ManageService{
     public List<SkuSaleAttrValue> getSkuSaleAttrValueListBySpu(String spuId) {
         return skuSaleAttrValueMapper.selectSkuSaleAttrValueListBySpu(spuId);
     }
+
+    @Override
+    public List<BaseAttrInfo> getAttrInfoList(List<String> attrValueIdList) {
+        String attrValueIds  = org.apache.commons.lang3.StringUtils.join(attrValueIdList.toArray(), ",");
+        //调用mapper
+       return baseAttrInfoMapper.selectAttrInfoListByIds(attrValueIds);
+
+    }
 }
