@@ -129,17 +129,17 @@ public class ListServiceImpl implements ListService {
         }
 
         skuLsResult.setSkuLsInfoList(infoArrayList);
-//        // 总条数
+       // 总条数
 //        long total;
         skuLsResult.setTotal(searchResult.getTotal());
 
-//        // 总页数
+      // 总页数
 //        long totalPages;
         // 10 3 4  | 9 3 3
         // long totalPages = searchResult.getTotal()%skuLsParams.getPageSize()==0?searchResult.getTotal()/skuLsParams.getPageSize():searchResult.getTotal()/skuLsParams.getPageSize()+1;
         long totalPages = (searchResult.getTotal() + skuLsParams.getPageSize() - 1) / skuLsParams.getPageSize();
         skuLsResult.setTotalPages(totalPages);
-//        // 平台属性值Id集合 显示平台属性，平台属性值
+       // 平台属性值Id集合 显示平台属性，平台属性值
 //        List<String> attrValueIdList;
         ArrayList<String> stringArrayList = new ArrayList<>();
         TermsAggregation groupby_attr = searchResult.getAggregations().getTermsAggregation("groupby_attr");
