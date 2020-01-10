@@ -23,7 +23,6 @@ public class ItemController {
     @Reference
     private ListService listService;
     @RequestMapping("{skuId}.html")
-    @LoginRequire
     public String item(@PathVariable String skuId, HttpServletRequest request){
         // 将商品的图片列表封装到skuInfo 的 skuImageList
        // System.out.println(skuId);

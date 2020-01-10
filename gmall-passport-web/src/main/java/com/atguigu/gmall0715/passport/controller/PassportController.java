@@ -39,7 +39,7 @@ public class PassportController {
             map.put("userId",info.getId());
             map.put("nickName",info.getNickName());
             //String salt="192.168.1.125";
-           String salt = request.getHeader("X-forwarded-for");
+           String salt = request.getHeader("X-forwarded-for");//获取盐
            String token= JwtUtil.encode(key,map,salt);
            return token;
        }
