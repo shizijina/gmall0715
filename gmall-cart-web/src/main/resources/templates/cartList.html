@@ -86,7 +86,7 @@
 
                     <div>
                         <ol>
-                            <li><input type="checkbox"   class="check"   onchange="checkSku(this)"  /></li>
+                            <li><input type="checkbox"   class="check"  th:value="${cartInfo.skuId}" th:checked="${cartInfo.isChecked}" onchange="checkSku(this)"  /></li>
                             <li>
                                 <dt><img  th:src="${cartInfo.imgUrl}"  alt=""></dt>
                                 <dd th:onclick="'toItem('+${cartInfo.skuId}+')'" onclick="toItem(1)">
